@@ -27,13 +27,14 @@ def load_data(data):
     return train_data
 
 corpus_dir = sys.argv[1]
-#model_path=sys.argv[2]
+model_name=sys.argv[2]
+n=sys.argv[3]
 
 
 if __name__=="__main__":
     data=open(corpus_dir,'r',encoding='utf-8').readlines()
     train_data=load_data(data)
-    train_data,vocab=padded_everygram_pipeline(3,train_data)
-    model=MLE(3)
+    train_data,vocab=padded_everygram_pipeline(int(n),train_data)
+    model=MLE(int(n))
     model.fit(train_data,vocab)
-    pickle.dump(model,open('model.pickle','wb'))
+    pickle.dump(model,open(model_name,'wb'))
