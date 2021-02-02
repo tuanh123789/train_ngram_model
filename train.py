@@ -13,14 +13,24 @@ import pickle
 def load_data(data):
     train_data=[]   
     for line in data:
+        line=line.replace(',','.')
         line=line.split('.')
         for sentence in line:
-            sentence=re.sub(r'[().,:;/%$-@!*&^?><_#+]',' ',sentence)
+            sentence=re.sub(r'[():;/%$-@!*&^?><_#+]',' ',sentence)
             sentence=sentence.replace('"',' ')
             sentence=sentence.replace("'"," ")
             sentence,pos_tag=ViPosTagger.postagging(sentence)
-            remove=[index for (index,pos) in enumerate(pos_tag) if pos in ['M','X','Np']]
-            sentence=[sentence[index] for index in range(len(sentence)) if index not in remove]
+            for index,pos in enumerate(pos_tag):
+                if pos == 'Np':
+                    sentence[index]='Np'
+                if pos == 'Nc':
+                    sentence[index]='Nc'
+                if pos == 'X':
+                    sentence[index]='X'
+                if pos == 'Ny':
+                    sentence[index]='Ny'
+                if pos == 'M':
+                    sentence[index]='M'
             sentence=[word.lower().rstrip('\n') for word in sentence if word != '']
             if len(sentence) > 1:
                 train_data.append(sentence)
